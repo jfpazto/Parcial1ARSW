@@ -3,9 +3,9 @@ package eci.arsw.covidanalyzer.model;
 public class Result {
 	public String idPerson;
 	public String nombre;
-	public double resultType;
+	public ResultType resultType;
 	
-	public Result(String idPerson, String nombre,double resultType) {
+	public Result(String idPerson, String nombre,ResultType resultType) {
 		this.idPerson = idPerson;
 		this.resultType = resultType;
 	}
@@ -21,10 +21,10 @@ public class Result {
 	public void setIdPerson(String idPerson) {
 		this.idPerson = idPerson;
 	}
-	public double getResultType() {
+	public ResultType getResultType() {
 		return resultType;
 	}
-	public void setResultType(double resultType) {
+	public void setResultType(ResultType resultType) {
 		this.resultType = resultType;
 	}
 	

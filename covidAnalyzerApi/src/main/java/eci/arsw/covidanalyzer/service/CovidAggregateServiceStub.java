@@ -13,38 +13,61 @@ import eci.arsw.covidanalyzer.model.ResultType;
 @Service
 public class CovidAggregateServiceStub implements ICovidAggregateService {
 	private final ConcurrentHashMap<ResultType,Result> resultados = new ConcurrentHashMap<>();
+	List<Result> resti;
 	
 	public CovidAggregateServiceStub() {
-		
-		Result r1=new Result("1","Pablo",0.9);
-		Result r2=new Result("2","Pedro",0.9);
-		Result r3=new Result("3","Gonzalo",0.9);
+		resti=new CopyOnWriteArrayList<>();
 		ResultType result=ResultType.TRUE_POSITIVE;
+		Result r1=new Result("1","Pablo",result);
+		Result r2=new Result("2","Pedro",result);
+		Result r3=new Result("3","Gonzalo",result);
 		
-		aggregateResult(r1, result);
-		//aggregateResult(r2, result);
-		//aggregateResult(r3, result);
+		
+		resti.add(r1);
+		resti.add(r2);
+		resti.add(r3);
 		
 		
 		
 	}
 
 	@Override
-	public boolean aggregateResult(Result result, ResultType type) {
-		resultados.put(type,result);
+	public boolean aggregateResult(Result result, ResultType type) throws ResultException {
+		for (Result elemento:resti)
+		{
+			if(elemento.getIdPerson().equals(result.idPerson))
+			{
+				throw new ResultException("cuenta ya creada");
+			}
+		}
+		resti.add(result);
 		return true;
 	}
 
 	@Override
-	public Result getResult(ResultType type) {
-		Result res=resultados.get(type);
-		return res;
+	public List<Result> getResult(ResultType type) {
+		List<Result> restfin=new CopyOnWriteArrayList<>();
+		for (Result elemento:resti)
+		{
+			if(elemento.getResultType().equals(type))
+			{
+				restfin.add(elemento);
+			}
+		}
+		return restfin;
 		
 	}
 
 	@Override
-	public void upsertPersonWithMultipleTests(UUID id, ResultType type) {
-		// TODO Auto-generated method stub
+	public void upsertPersonWithMultipleTests(String id, ResultType type) {
+		for (Result elemento:resti)
+		{
+			if(elemento.getIdPerson().equals(id))
+			{
+				elemento.setResultType(type);
+			
+			}
+		}
 	}
 
 }
